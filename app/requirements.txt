@@ -1,0 +1,7 @@
+Flask
+uWSGI
+autopep8
+flake8
+graphviz
+pandas
+xlrd

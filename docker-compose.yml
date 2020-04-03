@@ -1,0 +1,20 @@
+version: "2"
+services:
+    es_vis:
+        container_name: 'es_vis'
+        build:
+            context: ./app
+        volumes:
+            - ./app:/app/
+        ports:
+            - "3031:3031"
+            - "3306:3306"
+    nginx:
+        container_name: 'nginx'
+        build: ./nginx
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        links:
+            - es_vis
+        ports:
+            - "80:80"
