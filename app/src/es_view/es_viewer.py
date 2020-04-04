@@ -31,6 +31,9 @@ def get_label(
         str
 
     '''
+    if company != company or company is None:
+        # company名が欠損のときは全体の値な気がする
+        company = '全体'
     if type(pop) is float and pop == pop:
         pop = int(pop)
     elif type(pop) is int:
@@ -73,7 +76,7 @@ class ESViewer:
     def __init__(self, es_data: DataFrame, network: [list]):
         assert os.path.exists(f'/usr/share/fonts/truetype/{FONTNAME}')
         self.g = Graph(format='png')
-        self.g.attr('graph', charset='UTF-8', fontname=FONTNAME)
+        self.g.attr('graph', charset='UTF-8', fontname=FONTNAME, rankdir='LR')
         self.g.attr('node', shape='note', color='azure4', fontname=FONTNAME)
         self.g.attr('edge', color='azure4', fontname=FONTNAME)
         self.es_data = es_data
