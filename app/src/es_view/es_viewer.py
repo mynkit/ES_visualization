@@ -5,7 +5,13 @@ from pandas.core.frame import DataFrame
 FONTNAME = 'ヒラギノ丸ゴ ProN W4.ttc'
 
 
-def get_label(company: str, leader: str, pop: int, ES: float) -> str:
+def get_label(
+    company: str,
+    leader: str,
+    pop: int,
+    ES: float,
+    color: str
+) -> str:
     '''nodeのラベルを取得する
 
     ┌──────────────────────┐
@@ -19,6 +25,7 @@ def get_label(company: str, leader: str, pop: int, ES: float) -> str:
         leader (str): 責任者．
         pop (int): そのカンパニーにいる人数(正式にはESの回答者数)
         ES (int): Engagement Score.
+        color (str): 色コード
 
     Returns:
         str
@@ -31,7 +38,7 @@ def get_label(company: str, leader: str, pop: int, ES: float) -> str:
     ...  <TR>
     ...    <TD colspan="2">{leader}</TD>
     ...    <TD colspan="1">{int(pop)}名</TD>
-    ...    <TD colspan="1">{ES}</TD>
+    ...    <TD colspan="1" bgcolor="{color}">{ES}</TD>
     ...  </TR>
     ... </TABLE>>'''
 
@@ -79,7 +86,8 @@ class ESViewer:
                     style='filled',
                     fillcolor='gray100',
                     fontcolor='black',
-                    label=get_label(r['属性名'], '不明', r['回答者数'], r['ES'])
+                    label=get_label(r['属性名'], '不明', r['回答者数'],
+                                    r['ES'], r['color'])
                 )
 
     def save(self, filename: str = None):
