@@ -15,7 +15,7 @@ def get_es_data(es_data_path: str) -> DataFrame:
         es_data_path,
         usecols=['属性記号', '属性No', '属性名', '回答者数', 'ES'],
         encoding='shift_jis'
-    ).dropna(how='any')
+    )
     es_data['id'] = [f'{symbol}{num:03.0f}' for symbol,
                      num in zip(es_data['属性記号'], es_data['属性No'])]
     es_data['ES'] = es_data['ES'].apply(lambda x: __format_ES(x))
@@ -31,7 +31,7 @@ def __format_ES(ES: str):
         ES (str)
 
     '''
-    if re.search(r'([0-9.]+)', ES):
+    if type(ES) is str and re.search(r'([0-9.]+)', ES):
         ES = re.findall(r'([0-9.]+)', ES)[0]
         return float(ES)
     else:
@@ -176,7 +176,7 @@ def format_org_tree(org_tree: DataFrame) -> DataFrame:
     org_tree_ = org_tree_.fillna(method='ffill')
     # nodeにすべきでない担当は除外する
     org_tree_ = org_tree_.applymap(
-        lambda x: None if '該当なし' in x or 'E001' in x else x)
+        lambda x: None if '該当なし' in x else x)
     org_tree_ = org_tree_.dropna(how='any')
     # 担当コードを取得
     org_tree_ = org_tree_.applymap(lambda x: re.findall(r'([A-Z]\d{3})', x)[0])
@@ -189,7 +189,8 @@ def get_network(org_tree_formatted: DataFrame) -> [list]:
     max_colnum = org_tree_formatted.columns.max()
     network = []
     for _, r in org_tree_formatted.iterrows():
-        for i in range(max_colnum - 1):
+        for i in range(max_colnum):
             if [r[i], r[i + 1]] not in network:
-                network.append([r[i], r[i + 1]])
+                if 'E001' not in [r[i], r[i + 1]]:
+                    network.append([r[i], r[i + 1]])
     return network

@@ -31,13 +31,21 @@ def get_label(
         str
 
     '''
+    if type(pop) is float and pop == pop:
+        pop = int(pop)
+    elif type(pop) is int:
+        pop = pop
+    else:
+        pop = 0
+    if ES != ES:
+        ES = '不明'
     return f'''<<TABLE>
     ...  <TR>
     ...    <TD colspan="4">{company}</TD>
     ...  </TR>
     ...  <TR>
     ...    <TD colspan="2">{leader}</TD>
-    ...    <TD colspan="1">{int(pop)}名</TD>
+    ...    <TD colspan="1">{pop}名</TD>
     ...    <TD colspan="1" bgcolor="{color}">{ES}</TD>
     ...  </TR>
     ... </TABLE>>'''
@@ -80,15 +88,14 @@ class ESViewer:
             self.g.edge(edge[0], edge[1])
             node_ids.extend(edge)
         for _, r in self.es_data.iterrows():
-            if r['id'] in set(node_ids):
-                self.g.node(
-                    r['id'],
-                    style='filled',
-                    fillcolor='gray100',
-                    fontcolor='black',
-                    label=get_label(r['属性名'], '不明', r['回答者数'],
-                                    r['ES'], r['color'])
-                )
+            self.g.node(
+                r['id'],
+                style='filled',
+                fillcolor='gray100',
+                fontcolor='black',
+                label=get_label(r['属性名'], '不明', r['回答者数'],
+                                r['ES'], r['color'])
+            )
 
     def save(self, filename: str = None):
         '''画像を保存する
