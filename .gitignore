@@ -2,7 +2,7 @@
 *.DS_Store
 __pycache__/
 output/
-*.es_img.png
+*es_img.png
 *es_img
 *.csv
 *.xls
