@@ -86,11 +86,7 @@ class ESViewer:
     def fit(self):
         '''nodeとedgeのセット
         '''
-        node_ids = []
-        for edge in self.network:
-            self.g.edge(edge[0], edge[1])
-            node_ids.extend(edge)
-        for _, r in self.es_data.iterrows():
+        for _, r in self.es_data.sort_values('id', ascending=False).iterrows():
             self.g.node(
                 r['id'],
                 style='filled',
@@ -99,6 +95,8 @@ class ESViewer:
                 label=get_label(r['属性名'], '不明', r['回答者数'],
                                 r['ES'], r['color'])
             )
+        for edge in self.network:
+            self.g.edge(edge[0], edge[1])
 
     def save(self, filename: str = None):
         '''画像を保存する
