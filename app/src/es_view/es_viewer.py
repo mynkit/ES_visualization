@@ -77,7 +77,7 @@ class ESViewer:
         assert os.path.exists(f'/usr/share/fonts/truetype/{FONTNAME}')
         self.g = Graph(format='png')
         self.g.attr('graph', charset='UTF-8', fontname=FONTNAME, rankdir='LR')
-        self.g.attr('node', shape='note', color='azure4', fontname=FONTNAME)
+        self.g.attr('node', shape='none', color='azure4', fontname=FONTNAME)
         self.g.attr('edge', color='azure4', fontname=FONTNAME)
         self.es_data = es_data
         self.network = network
