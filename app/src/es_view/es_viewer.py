@@ -31,6 +31,9 @@ def get_label(
         str
 
     '''
+    if company != company or company is None:
+        # company名が欠損のときは全体の値な気がする
+        company = '全体'
     if type(pop) is float and pop == pop:
         pop = int(pop)
     elif type(pop) is int:
@@ -73,8 +76,8 @@ class ESViewer:
     def __init__(self, es_data: DataFrame, network: [list]):
         assert os.path.exists(f'/usr/share/fonts/truetype/{FONTNAME}')
         self.g = Graph(format='png')
-        self.g.attr('graph', charset='UTF-8', fontname=FONTNAME)
-        self.g.attr('node', shape='note', color='azure4', fontname=FONTNAME)
+        self.g.attr('graph', charset='UTF-8', fontname=FONTNAME, rankdir='LR')
+        self.g.attr('node', shape='none', color='azure4', fontname=FONTNAME)
         self.g.attr('edge', color='azure4', fontname=FONTNAME)
         self.es_data = es_data
         self.network = network
@@ -83,11 +86,7 @@ class ESViewer:
     def fit(self):
         '''nodeとedgeのセット
         '''
-        node_ids = []
-        for edge in self.network:
-            self.g.edge(edge[0], edge[1])
-            node_ids.extend(edge)
-        for _, r in self.es_data.iterrows():
+        for _, r in self.es_data.sort_values('id', ascending=False).iterrows():
             self.g.node(
                 r['id'],
                 style='filled',
@@ -96,6 +95,8 @@ class ESViewer:
                 label=get_label(r['属性名'], '不明', r['回答者数'],
                                 r['ES'], r['color'])
             )
+        for edge in self.network:
+            self.g.edge(edge[0], edge[1])
 
     def save(self, filename: str = None):
         '''画像を保存する
